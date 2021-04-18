@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/static/level1.css">
+  <script src="/static/index.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {
+      height: auto;
+    }
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #080808;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: rgb(3, 3, 3);
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+
+      .row.content {
+
+        height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Logo</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+        </ul>
+        {% if user.is_authenticated %}
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#">Hiii {{request.user}}</a></li>
+          <li><a href="/logout"> <span data-target="/logout" class=" glyphicon glyphicon-log-in"></span>
+              Logout</a></li>
+        </ul>
+        {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- center -->
+  <div class="container-fluid text-center">
+    <div style="background-image: url('/static/g1.png');" class="row content">
+      <div class="col-sm-2 sidenav">
+
+
+        <ul class="nav nav-pills nav-stacked">
+          <li><a href="#section2">Level1</a></li>
+          <li><a href="#level2.html">Level2</a></li>
+          <li><a href="#section4">Level3</a></li>
+          <li><a href="#section3">Level4</a></li>
+          <li><a href="#section2">Level5</a></li>
+          <li><a href="#section3">Level6</a></li>
+          <li><a href="#section3">Level7</a></li>
+          <li><a href="#section2">Level8</a></li>
+          <li><a href="#section2">Level9</a></li>
+          <li><a href="#section2">Level10</a></li>
+          <li><a href="#section2">Level11</a></li>
+          <li><a href="#section2">Level12</a></li>
+
+          <li>
+            <h2 style="color:rgb(247, 247, 247);">CLICKS(<span id="123">{{cnt|safe}}</span>)</h2>
+          </li>
+
+          <li>
+            <h2 style="color:rgb(247, 247, 247);">SCORE</h2>
+          </li>
+          <li>
+            <h1 id="scr" style="color:rgb(250, 249, 249);">0</h1>
+          </li>
+          <br>
+        </ul><br>
+
+        {% csrf_token %}
+      </div>
+      <div class="col-sm-9 text-left">
+        <div class="mid">
+          <!-- question -->
+          <div class="ques">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis deserunt eius necessitatibus,
+            corporis,
+            molestias amet nisi dicta ex minus quisquam repudiandae aliquam ea quos minima exercitationem
+            sint quo,
+            libero molestiae?
+          </div>
+          <!-- images -->
+          {% csrf_token %}
+          {% load static %}
+          <div class="cont">
+            {% for i in level1imag|slice:"0:" %}
+            <a data-toggle="popover" title="Yes you got it" data-content={{i.img_data}}> <img id={{i.img_id}}
+                onclick="fun('{{i.img_id}}','{{i.img_flag}}')" class="image"
+                style=" margin: 5px;border: 2px solid black; border-radius:10px" src='{{i.img_src}}' alt=""> </a>
+            {% endfor %}
+            <div class="form">
+              <input id="res" type="text" placeholder="Answer"> <br> <button class="bt" onclick="ans()">Submit</button>
+              <p id="dis"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer class="container-fluid text-center">
+    <p>Footer Text</p>
+  </footer>
+
+  <!-- javascript -->
+  <script>
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function myfunction() {
+      location.replace("level2.html");
+    }
+    function ans() {
+      var image = document.getElementById('im1');
+      var A = document.getElementById('res').value;
+      var a = "{{ans|safe}}";
+      // console.log(A)
+      if (a == A) {
+        //console.log(A)
+        // image.style.display = 'flex';
+        document.getElementById('dis').innerHTML = "hurray!!! 😄";
+        ft = true
+        sendData(image)
+        document.getElementById('scr').innerHTML = score;
+
+      }
+      else { document.getElementById('dis').innerHTML = "Sorry 👎"; }
+
+      if (A != "") {
+        var myvar = setTimeout(myfunction, 5000);
+      }
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    if ("{{cnt|safe}}" <0) {
+      setTimeout(function () {
+        window.location.reload(1);
+      }, 5000);
+      location.replace("level2.html");
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function fun(idd, flag) {
+      sendData(idd);
+      var id = idd;
+      console.log(flag)
+      if (flag == "false") {
+        //cnt= JSON.parse(localStorage.getItem('cart'));
+        alert("you have click" + id + "{{cnt|safe}}");
+      }
+      var c = "{{cnt|safe}}";
+      if (c <= 0) {
+        console.log(c);
+        alert("YOU HAVE LEFT NO CLICKS")
+        setTimeout(function () {
+          window.location.reload(1);
+        }, 5000);
+        location.replace("level2.html");
+      }
+    }
+
+
+    function getCookie(name) {
+      if (!document.cookie) {
+        return null;
+      }
+
+      const xsrfCookies = document.cookie.split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(name + '='));
+
+      if (xsrfCookies.length === 0) {
+        return null;
+      }
+      return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+    }
+
+
+    ft = false
+    //disable display of an image;
+    function sendData(id) {
+      if (ft === true)
+        score = 10
+      else
+        score = 0
+
+      //alert(id)
+      const csrfToken = getCookie('csrftoken');
+      const request = new Request(
+        '/click',
+        { headers: { 'X-CSRFToken': csrfToken } }
+      );
+
+      fetch(request, {
+        method: 'POST',
+        body: JSON.stringify({ id: id, score: score }),
+        mode: 'same-origin'  // Do not send CSRF token to another domain.
+      }).then(function (response) {
+        console.log('hello')
+        console.log("hey" + "{{cnt|safe}}")
+        //console.log(score)
+      });
+
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $('123').load(document.URL + '123');
+    //popover  
+    $(document).ready(function () {
+      $('[data-toggle="popover"]').popover();
+    });
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  </script>
+
+</body>
+
+</html>
